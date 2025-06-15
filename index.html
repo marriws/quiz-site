@@ -117,7 +117,7 @@
   <!-- Модальное окно для неправильного ответа -->
   <div id="timerModal">
     <div class="modal-box">
-      <p>❌ Falsch! Warte: <span id="countdown">0</span> сек.</p>
+      <p>❌ Неправильно! Подождите: <span id="countdown">0</span> сек.</p>
     </div>
   </div>
 
@@ -130,6 +130,7 @@
   </div>
 
   <script>
+    // Массив вопросов с вариантами и правильным ответом (индекс)
     const questions = [
       { q: "1. Wie viele Spieler dürfen normalerweise auf der Ersatzbank sitzen?", options: ["1 bis 2 Spieler", "3 bis 5 Spieler", "5 bis 10 Spieler"], correct: 1 },
       { q: "2. Warum bekommen Spieler zuerst eine gelbe Karte?", options: ["Damit die Zuschauer länger zuschauen können", "Weil der Schiedsrichter die Zeit zählen muss", "Um den Spielern eine zweite Chance zu geben, sich besser zu verhalten"], correct: 2 },
@@ -140,8 +141,9 @@
       { q: "Ein brasilianischer Spieler gewann fünf Mal die Fußball-Weltmeisterschaft – Rekord!Wer ist das?", options: ["Ronaldinho", "Zico", "Pelé"], correct: 2 },
     ];
 
-    let current = 0;
+    let current = 0; // Текущий вопрос
 
+    // Получаем ссылки на элементы DOM
     const questionElem = document.getElementById('question');
     const optionsElem = document.getElementById('options');
     const timerModal = document.getElementById('timerModal');
@@ -149,7 +151,9 @@
     const correctModal = document.getElementById('correctModal');
     const nextBtn = document.getElementById('nextBtn');
 
+    // Показываем текущий вопрос и варианты
     function showQuestion() {
+      // Если вопросы закончились — выводим сообщение
       if (current >= questions.length) {
         document.getElementById('quiz-container').innerHTML = "<h2>Вы прошли квиз!</h2>";
         return;
@@ -157,27 +161,31 @@
 
       const q = questions[current];
       questionElem.textContent = q.q;
-      optionsElem.innerHTML = "";
+      optionsElem.innerHTML = ""; // очищаем варианты
 
+      // Создаем кнопки для каждого варианта
       q.options.forEach((opt, idx) => {
         const btn = document.createElement('div');
         btn.className = 'option';
         btn.textContent = opt;
-        btn.onclick = () => handleAnswer(idx === q.correct);
+        btn.onclick = () => handleAnswer(idx === q.correct); // передаём true/false
         optionsElem.appendChild(btn);
       });
     }
 
+    // Обработка ответа пользователя
     function handleAnswer(isCorrect) {
       if (isCorrect) {
         showCorrectModal();
       } else {
         showTimerModal();
-        // Блокируем клики по кнопкам, пока таймер идёт
+
+        // Блокируем клики по вариантам, пока идёт таймер
         optionsElem.querySelectorAll('.option').forEach(opt => opt.onclick = null);
       }
     }
 
+    // Показываем модальное окно с таймером при неправильном ответе
     function showTimerModal() {
       let timeLeft = 30;
       timerModal.style.display = 'flex';
@@ -190,7 +198,7 @@
           clearInterval(interval);
           timerModal.style.display = 'none';
 
-          // Восстановить клики после таймера
+          // Восстанавливаем клики после таймера
           const q = questions[current];
           optionsElem.querySelectorAll('.option').forEach((opt, idx) => {
             opt.onclick = () => handleAnswer(idx === q.correct);
@@ -199,6 +207,7 @@
       }, 1000);
     }
 
+    // Показываем модальное окно с правильным ответом
     function showCorrectModal() {
       correctModal.style.display = 'flex';
 
@@ -206,13 +215,17 @@
       optionsElem.querySelectorAll('.option').forEach(opt => opt.onclick = null);
     }
 
+    // Обработчик кнопки "Следующий вопрос"
     nextBtn.addEventListener('click', () => {
       correctModal.style.display = 'none';
       current++;
       showQuestion();
     });
 
-    showQuestion();
+    // Запускаем квиз, показывая первый вопрос после полной загрузки страницы
+    window.onload = () => {
+      showQuestion();
+    };
   </script>
 
 </body>
