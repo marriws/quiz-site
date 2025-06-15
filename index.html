@@ -204,14 +204,15 @@
       }, 1000);
     }
 
-    function showCorrectModal() {
-      const rand = Math.floor(Math.random() * links.length);
-      randomLink.textContent = links[rand].text;
-      randomLink.href = links[rand].href;
-      correctModal.style.display = 'flex';
+function showCorrectModal() {
+  randomLink.textContent = "Продолжить";
+  randomLink.href = "#";
+  correctModal.style.display = 'flex';
 
-      // Блокируем кнопки
-      optionsElem.querySelectorAll('.option').forEach(opt => opt.onclick = null);
+  // Блокируем кнопки
+  optionsElem.querySelectorAll('.option').forEach(opt => opt.onclick = null);
+}
+
     }
 
     nextBtn.addEventListener('click', () => {
