@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Квиз</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 50px 15px 0 15px;
+      background-color: #f9f9f9;
+    }
+
+    .question-box {
+      margin: 20px auto;
+      width: 100%;
+      max-width: 600px;
+      font-size: 24px;
+      font-weight: bold;
+      word-wrap: break-word;
+    }
+
+    .option {
+      margin: 10px 8px;
+      padding: 12px 25px;
+      background: #e0e0e0;
+      cursor: pointer;
+      border-radius: 6px;
+      display: inline-block;
+      font-size: 18px;
+      transition: background 0.3s ease;
+      min-width: 90px;
+      box-sizing: border-box;
+    }
+
+    .option:hover {
+      background: #c0c0c0;
+    }
+
+    #timerModal, #correctModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      font-size: 28px;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 999;
+      padding: 15px;
+      box-sizing: border-box;
+    }
+
+    .modal-box {
+      background-color: #222;
+      padding: 30px 50px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      max-width: 90vw;
+      word-wrap: break-word;
+    }
+
+    .correct-box a {
+      color: #4CAF50;
+      display: inline-block;
+      margin: 15px 0;
+      font-size: 20px;
+      text-decoration: underline;
+    }
+
+    .correct-box a:hover {
+      color: #81c784;
+    }
+
+    .correct-box button {
+      cursor: pointer;
+      padding: 12px 25px;
+      font-size: 18px;
+      border-radius: 6px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    .correct-box button:hover {
+      background-color: #376f39;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        margin-top: 30px;
+      }
+
+      .question-box {
+        font-size: 20px;
+        width: 100%;
+      }
+
+      .option {
+        font-size: 16px;
+        padding: 10px 15px;
+        margin: 8px 4px;
+        min-width: 70px;
+      }
+
+      #timerModal, #correctModal {
+        font-size: 22px;
+      }
+
+      .modal-box {
+        padding: 20px 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="quiz-container">
+    <div id="question" class="question-box">Загрузка...</div>
+    <div id="options"></div>
+  </div>
+
+  <!-- Модальное окно для неправильного ответа -->
+  <div id="timerModal">
+    <div class="modal-box">
+      <p>❌ Falsch! Warte: <span id="countdown">0</span> sek.</p>
+    </div>
+  </div>
+
+  <!-- Модальное окно для правильного ответа -->
+  <div id="correctModal">
+    <div class="modal-box correct-box">
+      <p>Правильно! 🎉</p>
+      <a id="randomLink" href="#" target="_blank" rel="noopener noreferrer">Переход по ссылке</a>
+      <button id="nextBtn">Следующий вопрос</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      { q: "1. Wie viele Spieler dürfen normalerweise auf der Ersatzbank sitzen?", options: ["1 bis 2 Spieler", "3 bis 5 Spieler", "5 bis 10 Spieler"], correct: 1 },
+      { q: "2. Warum bekommen Spieler zuerst eine gelbe Karte?", options: ["Damit die Zuschauer länger zuschauen können", "Weil der Schiedsrichter die Zeit zählen muss", "Um den Spielern eine zweite Chance zu geben, sich besser zu verhalten"], correct: 2 },
+      { q: "3. Warum gibt es einen Elfmeter?", options: ["Ball über Seitenlinie", "Falscher Pass", "Foul im Strafraum"], correct: 2 },
+      { q: "Как зовут льва из «Короля Льва»?", options: ["Симба", "Муфаса", "Шрам"], correct: 0 },
+      { q: "Сколько в часе минут?", options: ["60", "100", "90"], correct: 0 },
+      { q: "Что пьёт кошка?", options: ["Молоко", "Сок", "Кола"], correct: 0 },
+      { q: "Самая большая планета?", options: ["Марс", "Юпитер", "Земля"], correct: 1 },
+      { q: "Сколько дней в неделе?", options: ["5", "6", "7"], correct: 2 }
+    ];
+
+    const links = [
+      { text: "Перейти на Википедию", href: "https://ru.wikipedia.org" },
+      { text: "Интересное на YouTube", href: "https://www.youtube.com" },
+      { text: "Научись коду на Codecademy", href: "https://www.codecademy.com" },
+      { text: "Учебник по HTML", href: "https://html5book.ru/html-html5/" },
+      { text: "Ответы на StackOverflow", href: "https://ru.stackoverflow.com" },
+      { text: "Посетите Google", href: "https://www.google.com" },
+      { text: "Образование на Khan Academy", href: "https://www.khanacademy.org/" },
+    ];
+
+    let current = 0;
+
+    const questionElem = document.getElementById('question');
+    const optionsElem = document.getElementById('options');
+    const timerModal = document.getElementById('timerModal');
+    const countdownElem = document.getElementById('countdown');
+    const correctModal = document.getElementById('correctModal');
+    const nextBtn = document.getElementById('nextBtn');
+    const randomLink = document.getElementById('randomLink');
+
+    function showQuestion() {
+      if (current >= questions.length) {
+        document.getElementById('quiz-container').innerHTML = "<h2>Вы прошли квиз!</h2>";
+        return;
+      }
+
+      const q = questions[current];
+      questionElem.textContent = q.q;
+      optionsElem.innerHTML = "";
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('div');
+        btn.className = 'option';
+        btn.textContent = opt;
+        btn.onclick = () => handleAnswer(idx === q.correct);
+        optionsElem.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(isCorrect) {
+      if (isCorrect) {
+        showCorrectModal();
+      } else {
+        showTimerModal();
+      }
+    }
+
+    function showTimerModal() {
+      let timeLeft = 30;
+      timerModal.style.display = 'flex';
+      countdownElem.textContent = timeLeft;
+
+      const interval = setInterval(() => {
+        timeLeft--;
+        countdownElem.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(interval);
+          timerModal.style.display = 'none';
+        }
+      }, 1000);
+    }
+
+    function showCorrectModal() {
+      const rand = Math.floor(Math.random() * links.length);
+      randomLink.textContent = links[rand].text;
+      randomLink.href = links[rand].href;
+      correctModal.style.display = 'flex';
+
+      // Блокируем кнопки
+      optionsElem.querySelectorAll('.option').forEach(opt => opt.onclick = null);
+    }
+
+    nextBtn.addEventListener('click', () => {
+      correctModal.style.display = 'none';
+      current++;
+      showQuestion();
+    });
+
+    showQuestion();
+  </script>
+
+</body>
+</html>
