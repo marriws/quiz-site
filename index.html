@@ -32,6 +32,7 @@
       transition: background 0.3s ease;
       min-width: 90px;
       box-sizing: border-box;
+      user-select: none;
     }
 
     .option:hover {
@@ -62,18 +63,6 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
       max-width: 90vw;
       word-wrap: break-word;
-    }
-
-    .correct-box a {
-      color: #4CAF50;
-      display: inline-block;
-      margin: 15px 0;
-      font-size: 20px;
-      text-decoration: underline;
-    }
-
-    .correct-box a:hover {
-      color: #81c784;
     }
 
     .correct-box button {
@@ -128,7 +117,7 @@
   <!-- Модальное окно для неправильного ответа -->
   <div id="timerModal">
     <div class="modal-box">
-      <p>❌ Falsch! Warte: <span id="countdown">0</span> sek.</p>
+      <p>❌ Falsch! Warte: <span id="countdown">0</span> сек.</p>
     </div>
   </div>
 
@@ -136,7 +125,6 @@
   <div id="correctModal">
     <div class="modal-box correct-box">
       <p>Правильно! 🎉</p>
-      <a id="randomLink" href="#" target="_blank" rel="noopener noreferrer">Переход по ссылке</a>
       <button id="nextBtn">Следующий вопрос</button>
     </div>
   </div>
@@ -160,7 +148,6 @@
     const countdownElem = document.getElementById('countdown');
     const correctModal = document.getElementById('correctModal');
     const nextBtn = document.getElementById('nextBtn');
-
 
     function showQuestion() {
       if (current >= questions.length) {
@@ -186,6 +173,8 @@
         showCorrectModal();
       } else {
         showTimerModal();
+        // Блокируем клики по кнопкам, пока таймер идёт
+        optionsElem.querySelectorAll('.option').forEach(opt => opt.onclick = null);
       }
     }
 
@@ -200,19 +189,21 @@
         if (timeLeft <= 0) {
           clearInterval(interval);
           timerModal.style.display = 'none';
+
+          // Восстановить клики после таймера
+          const q = questions[current];
+          optionsElem.querySelectorAll('.option').forEach((opt, idx) => {
+            opt.onclick = () => handleAnswer(idx === q.correct);
+          });
         }
       }, 1000);
     }
 
-function showCorrectModal() {
-  randomLink.textContent = "Продолжить";
-  randomLink.href = "#";
-  correctModal.style.display = 'flex';
+    function showCorrectModal() {
+      correctModal.style.display = 'flex';
 
-  // Блокируем кнопки
-  optionsElem.querySelectorAll('.option').forEach(opt => opt.onclick = null);
-}
-
+      // Блокируем клики по вариантам
+      optionsElem.querySelectorAll('.option').forEach(opt => opt.onclick = null);
     }
 
     nextBtn.addEventListener('click', () => {
