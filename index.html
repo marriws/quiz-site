@@ -130,17 +130,16 @@
   </div>
 
   <script>
-    // Массив вопросов с вариантами и правильным ответом (индекс)
-    const questions = [
-      { q: "1. Im Jahr 2021 besiegten die Young Boys einen großen englischen Club in der Champions League.Es war ein Last-Minute-Sieg im Stadion Wankdorf.Gegen wen spielten sie?	", options: ["FC Chelsea", "Manchester United", "Arsenal FC"], correct: 1 },
-      { q: "2. Welche dieser Schweizer Städte hat KEIN Erstligateam in der Super League??", options: ["Lugano", "Lausanne", "Schaffhausen"], correct: 2 },
-      { q: "3. Young Boys Bern war früher nicht immer ein Profi-Klub – wie nannten sich viele Teams in dieser Zeit (vor über 100 Jahren)?", options: ["FC Sportverein", "Fußballfreunde", "Fussballclub Studentia"], correct: 2 },
-      { q: "4. Das aktuelle Heimstadion der Young Boys wurde 2005 eröffnet und steht genau dort, wo früher das alte Wankdorf war.Wie viele Zuschauer passen heute ins neue Stadion?", options: ["Etwa 32.000", "Etwa 41.000", "Etwa 50.000"], correct: 0 },
-      { q: "Welche dieser Aussagen über die Young Boys stimmt?", options: ["Sie haben noch nie in der Champions-League-Gruppenphase gespielt.", "	Sie haben in einem Spiel gegen Bayer Leverkusen 4 Tore geschossen.", "Sie wurden gegründet in Luzern."], correct: 1 },
-      { q: "In welchem Jahr wurde BSC Young Boys gegründet?", options: ["1870", "1898", "1903"], correct: 1 },
-      { q: "In welcher Stadt wurde das Finale des Schweizer Cups 2020 gespielt, das Young Boys gewann?", options: ["Bern", "Basel", "Zürich"], correct: 2 },
-    ];
-
+    // Массив вопросов с вариантами и правильным ответо
+ (const questions = [
+  { q: "1. Im Jahr 2021 besiegten die Young Boys einen großen englischen Club in der Champions League.Es war ein Last-Minute-Sieg im Stadion Wankdorf.Gegen wen spielten sie?", options: ["FC Chelsea", "Manchester United", "Arsenal FC"], correct: 1 },
+  { q: "2. Welche dieser Schweizer Städte hat KEIN Erstligateam in der Super League?", options: ["Lugano", "Lausanne", "Schaffhausen"], correct: 2 },
+  { q: "3. Young Boys Bern war früher nicht immer ein Profi-Klub – wie nannten sich viele Teams in dieser Zeit (vor über 100 Jahren)?", options: ["FC Sportverein", "Fußballfreunde", "Fussballclub Studentia"], correct: 2 },
+  { q: "4. Das aktuelle Heimstadion der Young Boys wurde 2005 eröffnet und steht genau dort, wo früher das alte Wankdorf war.Wie viele Zuschauer passen heute ins neue Stadion?", options: ["Etwa 32.000", "Etwa 41.000", "Etwa 50.000"], correct: 0 },
+  { q: "5. Welche dieser Aussagen über die Young Boys stimmt?", options: ["Sie haben noch nie in der Champions-League-Gruppenphase gespielt.", "Sie haben in einem Spiel gegen Bayer Leverkusen 4 Tore geschossen.", "Sie wurden gegründet in Luzern."], correct: 1 },
+  { q: "6. In welchem Jahr wurde BSC Young Boys gegründet?", options: ["1870", "1898", "1903"], correct: 1 },
+  { q: "7. In welcher Stadt wurde das Finale des Schweizer Cups 2020 gespielt, das Young Boys gewann?", options: ["Bern", "Basel", "Zürich"], correct: 2 }
+];
     let current = 0; // Текущий вопрос
 
     // Получаем ссылки на элементы DOM
