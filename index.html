@@ -125,24 +125,24 @@
   <div id="correctModal">
     <div class="modal-box correct-box">
       <p>Richtig! 🎉</p>
-      <button id="nextBtn">nächste frage</button>
+      <button id="nextBtn">nächste Frage</button>
     </div>
   </div>
 
   <script>
-    // Массив вопросов с вариантами и правильным ответо
- (const questions = [
-  { q: "1. Im Jahr 2021 besiegten die Young Boys einen großen englischen Club in der Champions League.Es war ein Last-Minute-Sieg im Stadion Wankdorf.Gegen wen spielten sie?", options: ["FC Chelsea", "Manchester United", "Arsenal FC"], correct: 1 },
-  { q: "2. Welche dieser Schweizer Städte hat KEIN Erstligateam in der Super League?", options: ["Lugano", "Lausanne", "Schaffhausen"], correct: 2 },
-  { q: "3. Young Boys Bern war früher nicht immer ein Profi-Klub – wie nannten sich viele Teams in dieser Zeit (vor über 100 Jahren)?", options: ["FC Sportverein", "Fußballfreunde", "Fussballclub Studentia"], correct: 2 },
-  { q: "4. Das aktuelle Heimstadion der Young Boys wurde 2005 eröffnet und steht genau dort, wo früher das alte Wankdorf war.Wie viele Zuschauer passen heute ins neue Stadion?", options: ["Etwa 32.000", "Etwa 41.000", "Etwa 50.000"], correct: 0 },
-  { q: "5. Welche dieser Aussagen über die Young Boys stimmt?", options: ["Sie haben noch nie in der Champions-League-Gruppenphase gespielt.", "Sie haben in einem Spiel gegen Bayer Leverkusen 4 Tore geschossen.", "Sie wurden gegründet in Luzern."], correct: 1 },
-  { q: "6. In welchem Jahr wurde BSC Young Boys gegründet?", options: ["1870", "1898", "1903"], correct: 1 },
-  { q: "7. In welcher Stadt wurde das Finale des Schweizer Cups 2020 gespielt, das Young Boys gewann?", options: ["Bern", "Basel", "Zürich"], correct: 2 }
-];
+    // Массив вопросов с вариантами и правильным ответом
+    const questions = [
+      { q: "1. Im Jahr 2021 besiegten die Young Boys einen großen englischen Club in der Champions League.Es war ein Last-Minute-Sieg im Stadion Wankdorf.Gegen wen spielten sie?", options: ["FC Chelsea", "Manchester United", "Arsenal FC"], correct: 1 },
+      { q: "2. Welche dieser Schweizer Städte hat KEIN Erstligateam in der Super League?", options: ["Lugano", "Lausanne", "Schaffhausen"], correct: 2 },
+      { q: "3. Young Boys Bern war früher nicht immer ein Profi-Klub – wie nannten sich viele Teams in dieser Zeit (vor über 100 Jahren)?", options: ["FC Sportverein", "Fußballfreunde", "Fussballclub Studentia"], correct: 2 },
+      { q: "4. Das aktuelle Heimstadion der Young Boys wurde 2005 eröffnet und steht genau dort, wo früher das alte Wankdorf war.Wie viele Zuschauer passen heute ins neue Stadion?", options: ["Etwa 32.000", "Etwa 41.000", "Etwa 50.000"], correct: 0 },
+      { q: "5. Welche dieser Aussagen über die Young Boys stimmt?", options: ["Sie haben noch nie in der Champions-League-Gruppenphase gespielt.", "Sie haben in einem Spiel gegen Bayer Leverkusen 4 Tore geschossen.", "Sie wurden gegründet in Luzern."], correct: 1 },
+      { q: "6. In welchem Jahr wurde BSC Young Boys gegründet?", options: ["1870", "1898", "1903"], correct: 1 },
+      { q: "7. In welcher Stadt wurde das Finale des Schweizer Cups 2020 gespielt, das Young Boys gewann?", options: ["Bern", "Basel", "Zürich"], correct: 2 }
+    ];
+
     let current = 0; // Текущий вопрос
 
-    // Получаем ссылки на элементы DOM
     const questionElem = document.getElementById('question');
     const optionsElem = document.getElementById('options');
     const timerModal = document.getElementById('timerModal');
@@ -150,9 +150,7 @@
     const correctModal = document.getElementById('correctModal');
     const nextBtn = document.getElementById('nextBtn');
 
-    // Показываем текущий вопрос и варианты
     function showQuestion() {
-      // Если вопросы закончились — выводим сообщение
       if (current >= questions.length) {
         document.getElementById('quiz-container').innerHTML = "<h2>Вы прошли квиз!</h2>";
         return;
@@ -160,31 +158,26 @@
 
       const q = questions[current];
       questionElem.textContent = q.q;
-      optionsElem.innerHTML = ""; // очищаем варианты
+      optionsElem.innerHTML = "";
 
-      // Создаем кнопки для каждого варианта
       q.options.forEach((opt, idx) => {
         const btn = document.createElement('div');
         btn.className = 'option';
         btn.textContent = opt;
-        btn.onclick = () => handleAnswer(idx === q.correct); // передаём true/false
+        btn.onclick = () => handleAnswer(idx === q.correct);
         optionsElem.appendChild(btn);
       });
     }
 
-    // Обработка ответа пользователя
     function handleAnswer(isCorrect) {
       if (isCorrect) {
         showCorrectModal();
       } else {
         showTimerModal();
-
-        // Блокируем клики по вариантам, пока идёт таймер
         optionsElem.querySelectorAll('.option').forEach(opt => opt.onclick = null);
       }
     }
 
-    // Показываем модальное окно с таймером при неправильном ответе
     function showTimerModal() {
       let timeLeft = 30;
       timerModal.style.display = 'flex';
@@ -196,8 +189,6 @@
         if (timeLeft <= 0) {
           clearInterval(interval);
           timerModal.style.display = 'none';
-
-          // Восстанавливаем клики после таймера
           const q = questions[current];
           optionsElem.querySelectorAll('.option').forEach((opt, idx) => {
             opt.onclick = () => handleAnswer(idx === q.correct);
@@ -206,22 +197,17 @@
       }, 1000);
     }
 
-    // Показываем модальное окно с правильным ответом
     function showCorrectModal() {
       correctModal.style.display = 'flex';
-
-      // Блокируем клики по вариантам
       optionsElem.querySelectorAll('.option').forEach(opt => opt.onclick = null);
     }
 
-    // Обработчик кнопки "Следующий вопрос"
     nextBtn.addEventListener('click', () => {
       correctModal.style.display = 'none';
       current++;
       showQuestion();
     });
 
-    // Запускаем квиз, показывая первый вопрос после полной загрузки страницы
     window.onload = () => {
       showQuestion();
     };
@@ -229,3 +215,4 @@
 
 </body>
 </html>
+
