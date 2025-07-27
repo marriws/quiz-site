@@ -1,6 +1,6 @@
-# Fußball-Quiz – BSC Young Boys
+# Fussball-Quiz
 
-Dies ist ein einfaches Quiz über den Fußballverein BSC Young Boys.  
+Dies ist ein einfaches Quiz über den Fussballverein BSC Young Boys.  
 Ich habe es als Teil meines Portfolios zur Bewerbung um eine Lehrstelle erstellt.
 
 ##  Was kann das Quiz?
