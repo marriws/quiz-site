@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Квиз</title>
+  <title>quiz</title>
   <style>
     body {
       font-family: sans-serif;
@@ -110,18 +110,16 @@
 <body>
 
   <div id="quiz-container">
-    <div id="question" class="question-box">Загрузка...</div>
+    <div id="question" class="question-box">loading...</div>
     <div id="options"></div>
   </div>
 
-  <!-- Модальное окно для неправильного ответа -->
   <div id="timerModal">
     <div class="modal-box">
       <p>❌ Falsch! Warte: <span id="countdown">0</span> sek.</p>
     </div>
   </div>
 
-  <!-- Модальное окно для правильного ответа -->
   <div id="correctModal">
     <div class="modal-box correct-box">
       <p>Richtig! 🎉</p>
